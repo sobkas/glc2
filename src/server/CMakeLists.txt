@@ -1,0 +1,38 @@
+SET(SERVER_DIR "${CMAKE_SOURCE_DIR}/src/server")
+SET(COMMON_DIR "${CMAKE_SOURCE_DIR}/src/common")
+
+SET(GLC2_SERVER_SRC
+    ${SERVER_DIR}/server.c
+    ${COMMON_DIR}/packetstream.c)
+
+SET(CMAKE_C_FLAGS "${BASE_C_FLAGS} -Wall -Wextra -Wno-missing-field-initializers -fvisibility=hidden")
+INCLUDE_DIRECTORIES(${COMMON_DIR})
+
+ADD_LIBRARY(glc2_server SHARED ${GLC2_SERVER_SRC})
+TARGET_LINK_LIBRARIES(glc2_server pthread)
+SET_TARGET_PROPERTIES(glc2_server PROPERTIES
+    OUTPUT_NAME glc2-server
+    VERSION ${GLC2_SERVER_VERSION}
+    SOVERSION ${GLC2_SERVER_VERSION})
+
+
+IF(CMAKE_SIZEOF_VOID_P MATCHES "8")
+    IF(EXISTS "${CMAKE_INSTALL_PREFIX}/lib/x86_64-linux-gnu")
+        INSTALL(TARGETS glc2_server DESTINATION lib/x86_64-linux-gnu)
+    ELSEIF(EXISTS "${CMAKE_INSTALL_PREFIX}/lib64")
+        INSTALL(TARGETS glc2_server DESTINATION lib64)
+    ELSE()
+        INSTALL(TARGETS glc2_server DESTINATION lib)
+    ENDIF()
+ELSE()
+    IF(EXISTS "${CMAKE_INSTALL_PREFIX}/lib/i386-linux-gnu")
+        INSTALL(TARGETS glc2_server DESTINATION lib/i386-linux-gnu)
+    ELSEIF(EXISTS "${CMAKE_INSTALL_PREFIX}/lib32")
+        INSTALL(TARGETS glc2_server DESTINATION lib32)
+    ELSE()
+        INSTALL(TARGETS glc2_server DESTINATION lib)
+    ENDIF()
+ENDIF()
+
+INSTALL(FILES glc2-server.h DESTINATION include)
+

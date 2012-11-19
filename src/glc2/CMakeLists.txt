@@ -1,0 +1,15 @@
+SET(GLC2_SRC
+    glc2.c)
+
+SET(CMAKE_C_FLAGS "${BASE_C_FLAGS} -Wall -Wextra -Wno-missing-field-initializers")
+
+# FIXME
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/server)
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/common)
+
+ADD_EXECUTABLE(glc2 ${GLC2_SRC})
+
+# FIXME
+TARGET_LINK_LIBRARIES(glc2 glc2_server pthread)
+
+INSTALL(TARGETS glc2 DESTINATION bin)
